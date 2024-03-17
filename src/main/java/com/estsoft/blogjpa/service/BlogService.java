@@ -1,9 +1,13 @@
 package com.estsoft.blogjpa.service;
 
 import com.estsoft.blogjpa.dto.AddArticleRequest;
+import com.estsoft.blogjpa.dto.CommentRequest;
+import com.estsoft.blogjpa.dto.CommentResponse;
 import com.estsoft.blogjpa.external.ExampleAPIClient;
 import com.estsoft.blogjpa.model.Article;
+import com.estsoft.blogjpa.model.Comment;
 import com.estsoft.blogjpa.repository.BlogRepository;
+import com.estsoft.blogjpa.repository.CommentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +22,13 @@ import java.util.List;
 @Service
 public class BlogService {
     private final BlogRepository blogRepository;
+    private final CommentRepository commentRepository;
     private final ExampleAPIClient apiClient;
 
-    public BlogService(BlogRepository blogRepository, ExampleAPIClient apiClient) {
+    public BlogService(BlogRepository blogRepository, CommentRepository commentRepository,
+        ExampleAPIClient apiClient) {
         this.blogRepository = blogRepository;
+        this.commentRepository = commentRepository;
         this.apiClient = apiClient;
     }
 
@@ -79,5 +86,28 @@ public class BlogService {
         return jsonMapList.stream()
                 .map(hashMap -> new Article(hashMap.get("title"), hashMap.get("body")))
                 .toList();
+    }
+
+    public Comment saveComment(Long articleId, CommentRequest commentRequest){
+        Article article = blogRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("not found article " + articleId));
+
+        Comment comment = Comment.builder()
+            .article(article)
+            .body(commentRequest.getBody())
+            .build();
+
+        return commentRepository.save(comment);
+    }
+
+    public Comment findComment(Long articleId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("not found comment" +commentId));
+
+        //TODO getArticle을 하고 getId를 하는 JPA의 세계란 신기하다..내부 동작을 찾아봐야할듯
+        if(comment.getArticle().getId().equals(articleId)) {
+            //TODO 어떤종류의 예외를 던질지 고민해보기 , 에러메시지도 어떻게 명확하게 작성해야할지도 고민해봐야겠다...
+            throw new IllegalArgumentException("articleId : " + articleId + " doesn't match to commentId : " + commentId);
+        }
+
+        return comment;
     }
 }
