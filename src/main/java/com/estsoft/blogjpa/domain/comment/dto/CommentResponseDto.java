@@ -1,6 +1,6 @@
-package com.estsoft.blogjpa.dto;
+package com.estsoft.blogjpa.domain.comment.dto;
 
-import com.estsoft.blogjpa.model.Comment;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,9 +9,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CommentRequest {//유저가 댓글을 보낼때
+public class CommentResponseDto {
+    private Long id;
     private String body;
+    private LocalDateTime createdAt;
 }

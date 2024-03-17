@@ -1,12 +1,11 @@
-package com.estsoft.blogjpa.dto;
+package com.estsoft.blogjpa.domain.article.dto;
 
-import com.estsoft.blogjpa.model.Article;
+import com.estsoft.blogjpa.domain.article.entity.Article;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

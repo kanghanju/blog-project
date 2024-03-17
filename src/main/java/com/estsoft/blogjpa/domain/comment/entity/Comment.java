@@ -1,6 +1,7 @@
-package com.estsoft.blogjpa.model;
+package com.estsoft.blogjpa.domain.comment.entity;
 
-import com.estsoft.blogjpa.dto.CommentResponse;
+import com.estsoft.blogjpa.domain.article.entity.Article;
+import com.estsoft.blogjpa.domain.comment.dto.CommentResponseDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -16,22 +17,21 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-@Entity
 @NoArgsConstructor
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id", updatable = false)
+    @Column(name = "comment_id",updatable = false)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "article_id", nullable = false)
+    @JoinColumn(name = "article_id",nullable = false)
     private Article article;
 
-    @Column(name = "body", nullable = false)
+    @Column(name  = "body",nullable = false)
     private String body;
 
     @CreatedDate
@@ -39,13 +39,13 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @Builder
-    public Comment(Article article, String body) {
+    public Comment(Article article,String body) {
         this.article = article;
         this.body = body;
     }
 
-    public CommentResponse toResponse() {
-        return CommentResponse.builder()
+    public CommentResponseDto toResponse() {
+        return CommentResponseDto.builder()
             .id(id)
             .body(body)
             .createdAt(createdAt)
