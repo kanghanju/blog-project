@@ -4,6 +4,7 @@ import com.estsoft.blogjpa.domain.comment.dto.CommentRequestDto;
 import com.estsoft.blogjpa.domain.comment.dto.CommentResponseDto;
 import com.estsoft.blogjpa.domain.comment.entity.Comment;
 import com.estsoft.blogjpa.domain.comment.service.CommentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> addComment(@PathVariable Long articleId,@RequestBody
         CommentRequestDto commentRequestDto) {
         Comment comment = commentService.saveComment(articleId,commentRequestDto);
-        return ResponseEntity.ok(comment.toResponse());
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment.toResponse());
     }
 
     @GetMapping("/{articleId}/{commentId}")
